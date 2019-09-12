@@ -1,0 +1,19 @@
+{
+  "name": "upside-assessment",
+  "version": "1.0.0",
+  "description": "A technical assessment for Upside. ",
+  "main": "index.js",
+  "scripts": {
+    "test": "export NODE_ENV=test&& jasmine"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jpkarvonen/upside-assessment.git"
+  },
+  "author": "John Karvonen",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/jpkarvonen/upside-assessment/issues"
+  },
+  "homepage": "https://github.com/jpkarvonen/upside-assessment#readme"
+}
