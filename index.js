@@ -13,17 +13,61 @@ function getTravelersFlightInfo() {
   var travelers = 'travelers';
   result[travelers] = [];
 
-  //iterate over profile service object to obtain profile data
-  profilesService.get().then((value) => {
-    for(let i = 0; i < value.profiles.length; i++){
-      result[travelers].push(
-        {
-          id: value.profiles[i].personId,
-          name: value.profiles[i].name,
-          flights: []
-        });
-    };
-    return console.log(result);
+  //get data
+  airlinesService.get().then((value) => {
+    let airlines = value.airlines;
+
+    tripService.get().then((value)=> {
+      let flights = value.trip.flights;
+
+      profilesService.get().then((value) => {
+        let persons = value.profiles
+
+        //outer loop to add user info to result
+        for(let i = 0; i < persons.length; i++){
+          result[travelers].push(
+            {
+              id: persons[i].personId,
+              name: persons[i].name,
+              flights: []
+            }
+          );
+
+          //inner loop to add all flight info
+          let flightArray = result[travelers][i].flights;
+          for(let j = 0; j < flights.length; j++){
+            if (flights[j].travelerIds.includes(persons[i].personId)) {
+
+              //inner inner loop inserts airline name and reward number
+              let leg = flights[j].legs
+              for(let x = 0; x < leg.length; x++){
+
+                let airlineRef = airlines.find(airline => airline.code === leg[x].airlineCode);
+                leg[x].airlineName = airlineRef.name;
+                let airReward = persons[i].rewardPrograms.air
+
+                //this conditional is not working as expected.
+                if(airlineRef.code in airReward) {
+                  console.log("it rang true!")
+                  leg[x].frequentFlyerNumber = airReward[airlineRef.code];
+                } else {
+                  leg[x].frequentFlyerNumber = '';
+                }
+
+              }
+              console.log(leg);
+              flightArray.push(
+                {
+                  legs: leg
+                }
+
+              );
+            };
+          };
+        };
+        console.log(util.inspect(result, {showHidden: false, depth: null}));
+      });
+    });
   });
 };
 
